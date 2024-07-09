@@ -18,7 +18,7 @@ int main(int argc, char *argv[]) {
                  .maxAngle = DEG2RAD * 140.0f,
                  .pos = (Vector2){0.f, 0.f},
                  .angle = 0.0f,
-                 .dir = 0.f,
+                 .dir = 180.f,
                  .q = 2.5f,
                  .contacts = NULL};
 
@@ -34,8 +34,7 @@ int main(int argc, char *argv[]) {
   while (!WindowShouldClose()) {
     BeginDrawing();
 
-    // SCREEN FADE EFFECT: draw everything persistent BEFORE this and
-    // everything radar related AFTER
+    // SCREEN FADE EFFECT
     Color bg = {0, 0, 0, 10};
     DrawRectangle(0, 0, state.sw, state.sh, bg);
 

@@ -9,9 +9,9 @@ void renderRadar(State *state, Radar *radar) {
   Vector2 screenPos = {state->sw / 2.0f, state->sh / 2.0f};
   Vector2 v =
       Vector2Rotate((Vector2){.x = 0.0f, .y = radar->range}, radar->angle);
-  Vector2 vt = Vector2Rotate(v, DEG2RAD * 180.f);
+  Vector2 vt = vLocal2Radar(vGlobal2Local(radar, v), screenPos);
 
-  DrawLineV(screenPos, Vector2Add(screenPos, vt), state->mainColor);
+  DrawLineV(screenPos, vt, state->mainColor);
 
   radar->angle += radar->q * GetFrameTime();
   if (fabs(radar->angle) > radar->maxAngle) {
@@ -20,22 +20,29 @@ void renderRadar(State *state, Radar *radar) {
 
   Contact *c = radar->contacts;
   while (c) {
-    Vector2 t = globalToLocal(radar, screenPos, (Vector2)c->pos);
-    float a = Vector2Angle(t, v) * RAD2DEG;
-    printf("%f\n", a);
+    Vector2 t = pGlobal2Local(radar, (Vector2)c->pos);
+    float a = Vector2Angle(t, v) * RAD2DEG - 180.f;
+    // printf("t:(%f|%f) v:(%f|%f)\n", t.x, t.y, v.x, v.y);
 
-    if (a < 5 && a > -5) {
-      DrawCircleV(t, c->size, state->mainColor);
+    if (fabs(a) < 10) {
+      DrawCircleV(vLocal2Radar(t, screenPos), c->size, state->mainColor);
     }
     c = c->next;
   }
 }
 
-Vector2 globalToLocal(Radar *radar, Vector2 screenPos, Vector2 pos) {
+Vector2 pGlobal2Local(Radar *radar, Vector2 pos) {
   pos = Vector2Subtract(pos, radar->pos);
-  pos = Vector2Rotate(pos, -radar->dir);
-  pos = Vector2Add(pos, screenPos);
+  pos = Vector2Rotate(pos, -radar->dir * DEG2RAD);
   return pos;
+}
+
+Vector2 vGlobal2Local(Radar *radar, Vector2 vec) {
+  return Vector2Rotate(vec, -radar->dir * DEG2RAD);
+}
+
+Vector2 vLocal2Radar(Vector2 vec, Vector2 screenPos) {
+  return Vector2Add(vec, screenPos);
 }
 
 void addContact(Radar *radar, Contact *contact) {

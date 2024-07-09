@@ -25,7 +25,11 @@ typedef struct radar {
 
 void renderRadar(State *state, Radar *radar);
 
-Vector2 globalToLocal(Radar *radar, Vector2 screenPos, Vector2 pos);
+Vector2 pGlobal2Local(Radar *radar, Vector2 pos);
+
+Vector2 vGlobal2Local(Radar *radar, Vector2 vec);
+
+Vector2 vLocal2Radar(Vector2 vec, Vector2 screenPos);
 
 void addContact(Radar *radar, Contact *c);
 
