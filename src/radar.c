@@ -1,7 +1,6 @@
 #include "radar.h"
 #include <raylib.h>
 #include <raymath.h>
-#include <stdio.h>
 
 void renderRadar(State *state, Radar *radar) {
   //  DrawCircle(state->sw / 2.0f, state->sh / 2.0f, 10, state->mainColor);
