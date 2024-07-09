@@ -1,3 +1,4 @@
+#include "game.h"
 #include <raylib.h>
 #include <raymath.h>
 #include <stdio.h>
@@ -14,11 +15,11 @@ int main(int argc, char *argv[]) {
   float dir = DEG2RAD * 180.0f;
   float range = 200.0f;
 
-  float q = 5.0f;
+  float q = 2.5f;
 
   Vector2 pos = {.x = SW / 2.0f, .y = SH / 2.0f};
 
-  SetTargetFPS(60);
+  SetTargetFPS(120);
 
   while (!WindowShouldClose()) {
     BeginDrawing();
