@@ -23,7 +23,7 @@ void renderRadar(State *state, Radar *radar) {
     float a = Vector2Angle(t, v) * RAD2DEG - 180.f;
     // printf("t:(%f|%f) v:(%f|%f)\n", t.x, t.y, v.x, v.y);
 
-    if (fabs(a) < 10) {
+    if (fabs(a) < 10 && Vector2LengthSqr(t) <= radar->range * radar->range) {
       DrawCircleV(vLocal2Radar(t, screenPos), c->size, state->mainColor);
     }
     c = c->next;
@@ -47,10 +47,10 @@ Vector2 vLocal2Radar(Vector2 vec, Vector2 screenPos) {
 void addContact(Radar *radar, Contact *contact) {
   if (!radar->contacts) {
     radar->contacts = contact;
-    return;
+  } else {
+    Contact *c = radar->contacts;
+    while (c->next)
+      c = c->next;
+    c->next = contact;
   }
-  Contact *c = radar->contacts;
-  while (c->next)
-    c = c->next;
-  c->next = contact;
 }

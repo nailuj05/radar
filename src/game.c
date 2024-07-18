@@ -1,7 +1,9 @@
 #include "game.h"
+#include "player.h"
 #include "radar.h"
 #include <raylib.h>
 #include <raymath.h>
+#include <stdio.h>
 #include <stdlib.h>
 
 #define SW 800
@@ -13,6 +15,14 @@ int main(int argc, char *argv[]) {
   // State
   State state = {GREEN, SW, SH};
 
+  // Player
+  Player player = {.pos = {0, 0},
+                   .dir = 180,
+                   .angSpeed = 10.0f,
+                   .speed = 10.0f,
+                   .hp = 100,
+                   .fuel = 100};
+
   // Radar
   Radar radar = {.range = 200.0f,
                  .maxAngle = DEG2RAD * 140.0f,
@@ -22,8 +32,9 @@ int main(int argc, char *argv[]) {
                  .q = 2.5f,
                  .contacts = NULL};
 
-  Contact c1 = {(Vector2){-50.f, -50.f}, 3.f, NULL};
-  Contact c2 = {(Vector2){-100.f, 0.f}, 3.f, NULL};
+  // Test Contacts
+  Contact c1 = {(Vector2){50.f, 200.f}, 10.f, NULL};
+  Contact c2 = {(Vector2){-100.f, 0.f}, 5.f, NULL};
   Contact c3 = {(Vector2){-50.f, 50.f}, 3.f, NULL};
   addContact(&radar, &c1);
   addContact(&radar, &c2);
@@ -40,9 +51,15 @@ int main(int argc, char *argv[]) {
 
   while (!WindowShouldClose()) {
     BeginTextureMode(target);
+    DrawRectangle(0, 0, 300, 100, BLACK);
+    DrawFPS(0, 0);
+
+    // steerShip(&player, &radar);
+
+    printf("%f,%f\n", player.pos.x, player.pos.y);
 
     // SCREEN FADE EFFECT
-    Color bg = {0, 0, 0, 10};
+    Color bg = {0, 0, 0, 20};
     DrawRectangle(0, 0, state.sw, state.sh, bg);
 
     renderRadar(&state, &radar);
@@ -51,7 +68,7 @@ int main(int argc, char *argv[]) {
 
     BeginDrawing();
 
-    // Post Process
+    // Post Processing
     BeginShaderMode(bloom);
     DrawTextureRec(target.texture,
                    (Rectangle){0, 0, (float)target.texture.width,
